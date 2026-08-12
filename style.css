@@ -1,0 +1,529 @@
+:root {
+  --primary: #ff7b1c;
+  --primary-dark: #ff5b00;
+  --background: #f4f7fb;
+  --surface: #ffffff;
+  --text: #242424;
+  --border: #e8ecf3;
+  --shadow: 0 16px 40px rgba(15, 23, 42, 0.14);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  font-family: "Poppins", sans-serif;
+  color: var(--text);
+  background: linear-gradient(135deg, #fff7ed 0%, var(--background) 100%);
+  user-select: none;
+  -webkit-user-select: none;
+}
+
+button {
+  border: none;
+  background: none;
+  font: inherit;
+  cursor: pointer;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+.app {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  padding: env(safe-area-inset-top) 0 env(safe-area-inset-bottom);
+}
+
+.header {
+  padding: 12px 14px 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.header-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+}
+
+.header-buttons {
+  display: flex;
+  gap: 8px;
+}
+
+.title-group h1 {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.title-group p {
+  font-size: 12px;
+  color: #6b7280;
+}
+
+.circle-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  font-size: 20px;
+}
+
+.circle-btn.active {
+  background: var(--primary);
+  color: white;
+}
+
+.thumb-strip {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  padding-bottom: 2px;
+}
+
+.thumb-btn {
+  flex: 0 0 72px;
+  width: 72px;
+  height: 72px;
+  border-radius: 16px;
+  padding: 3px;
+  background: var(--surface);
+  box-shadow: 0 8px 22px rgba(15, 23, 42, 0.12);
+  border: 2px solid transparent;
+}
+
+.thumb-btn.active {
+  border-color: var(--primary);
+}
+
+.thumb-btn img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.main {
+  flex: 1;
+  padding: 0 14px 10px;
+  min-height: 0;
+}
+
+.stage-card {
+  width: 100%;
+  height: 100%;
+  border-radius: 24px;
+  overflow: hidden;
+  background: radial-gradient(circle at top, #fffbf3 0%, #f2f6fb 100%);
+  box-shadow: var(--shadow);
+  border: 1px solid rgba(255, 255, 255, 0.7);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#coloringSvg {
+  width: 100%;
+  height: 100%;
+  display: block;
+  touch-action: manipulation;
+}
+
+/* Outline view: the artwork's own dark paths act as the linework, so the
+   stage goes white and only user fills add colour. */
+.stage-card.outline-mode {
+  background: #ffffff;
+}
+
+.stage-card.loading::after {
+  content: "Loading…";
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 14px;
+  color: #9ca3af;
+  background: inherit;
+}
+
+.stage-card {
+  position: relative;
+}
+
+/* Fillable regions — the mosaic paths, grouped by colour. */
+.region {
+  cursor: pointer;
+  transition: fill 0.18s ease;
+}
+
+/* Linework. Never fillable; keeps the drawing legible in both views. */
+.ink {
+  pointer-events: none;
+}
+
+/* Brief pop so a tap reads as registered, even when refilling the
+   same color. Regions can be tiny, so keep the scale subtle. */
+.region.just-filled {
+  animation: fillPop 0.28s ease;
+  transform-box: fill-box;
+  transform-origin: center;
+}
+
+@keyframes fillPop {
+  0% {
+    transform: scale(1);
+  }
+
+  45% {
+    transform: scale(1.04);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .region,
+  .region.just-filled {
+    transition: none;
+    animation: none;
+  }
+}
+
+.toolbar {
+  padding: 12px 14px calc(14px + env(safe-area-inset-bottom));
+  background: rgba(255, 255, 255, 0.9);
+  border-top: 1px solid var(--border);
+}
+
+.toolbar-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.tool-group {
+  display: flex;
+  gap: 8px;
+}
+
+.tool {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: #f4f7fb;
+  font-size: 20px;
+  box-shadow: 0 6px 16px rgba(15, 23, 42, 0.06);
+}
+
+.tool.active {
+  background: var(--primary);
+  color: white;
+}
+
+.selected-color {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: 3px solid white;
+  box-shadow: 0 4px 10px rgba(15, 23, 42, 0.14);
+}
+
+.palette {
+  display: grid;
+  grid-template-columns: repeat(10, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.color {
+  width: 100%;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  border: 2px solid transparent;
+}
+
+.color.active {
+  border-color: #111827;
+  transform: scale(1.05);
+}
+
+/* ==========================================================
+    COLOR PALETTE
+========================================================== */
+
+.scroll-container {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    padding-bottom: 6px;
+    min-height: 70px;
+    width: 100%;
+}
+
+.palette {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    justify-content: flex-start;
+    flex-wrap: nowrap;
+    width: fit-content;
+    margin-top: 18px;
+}
+
+.color {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 4px solid white;
+    cursor: pointer;
+    position: relative;
+    transition: var(--transition);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, .07);
+    display: flex;
+}
+
+.color:hover {
+    transform: translateY(-4px);
+}
+
+.color:active {
+    transform: scale(0.9);
+}
+
+.color.active {
+    transform: scale(1.05);
+}
+
+.color.active::before {
+    content: "";
+    position: absolute;
+    inset: -7px;
+    border-radius: 50%;
+    border: 3px solid var(--primary);
+    animation: pulse 1.5s infinite;
+}
+
+.color.active::after {
+    content: "✓";
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 20px;
+    font-weight: bold;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+/* ==========================================================
+    TOOL LABELS
+========================================================== */
+
+.tool span {
+    display: none;
+}
+
+/* ==========================================================
+    RIPPLE EFFECT
+========================================================== */
+
+.tool::after {
+    content: "";
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.45);
+    opacity: 0;
+    transform: scale(0);
+}
+
+.tool:active::after {
+    animation: ripple 0.45s ease;
+}
+
+@keyframes ripple {
+    from {
+        opacity: 0.6;
+        transform: scale(0.3);
+    }
+
+    to {
+        opacity: 0;
+        transform: scale(5);
+    }
+}
+
+/* ==========================================================
+    PULSE
+========================================================== */
+
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+
+    50% {
+        transform: scale(1.18);
+        opacity: 0.25;
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 0.8;
+    }
+}
+
+/* ==========================================================
+    BRUSH CURSOR
+========================================================== */
+
+#brushCursor {
+    transition: width 0.12s,
+        height 0.12s,
+        background 0.15s;
+}
+
+/* ==========================================================
+    FLOATING ANIMATION
+========================================================== */
+
+@keyframes floating {
+    0% {
+        transform: translateY(0px);
+    }
+
+    50% {
+        transform: translateY(-4px);
+    }
+
+    100% {
+        transform: translateY(0px);
+    }
+}
+
+.tool.active {
+    animation: floating 2.5s infinite ease-in-out;
+}
+
+/* ==========================================================
+    CANVAS APPEAR
+========================================================== */
+
+.canvas-wrapper {
+    animation: canvasAppear 0.55s ease;
+}
+
+@keyframes canvasAppear {
+    from {
+        opacity: 0;
+        transform: translateY(25px) scale(0.96);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+/* ==========================================================
+    SCROLLBAR
+========================================================== */
+
+::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+}
+
+/* ==========================================================
+    BUTTON HOVER
+========================================================== */
+
+.icon-btn:hover,
+.tool:hover {
+    box-shadow: 0 12px 28px rgba(0, 0, 0, 0.12);
+}
+
+/* ==========================================================
+    BUTTON ACTIVE
+========================================================== */
+
+.icon-btn:active,
+.tool:active {
+    transition: none;
+}
+
+/* ==========================================================
+    SOFT SHADOW HELPERS
+========================================================== */
+
+.shadow-sm {
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+}
+
+.shadow {
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.12);
+}
+
+.shadow-lg {
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.18);
+}
+
+/* ==========================================================
+    FADE IN
+========================================================== */
+
+.fade-in {
+    animation: fadeIn 0.35s ease;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+/* ==========================================================
+    SCALE IN
+========================================================== */
+
+.scale-in {
+    animation: scaleIn 0.35s ease;
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.85);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}

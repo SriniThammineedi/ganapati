@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover"
+    />
+    <title>Coloring Book App</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="app">
+      <header class="header">
+        <div class="header-top">
+          <div class="title-group">
+            <h1>Coloring Book</h1>
+            <p>Tap a region to add color</p>
+          </div>
+          <div class="header-buttons">
+            <button id="outlineBtn" class="circle-btn active" title="Toggle outline / artwork view">◑</button>
+            <button id="undoBtn" class="circle-btn" title="Undo last fill">↶</button>
+            <button id="clearBtn" class="circle-btn" title="Clear all fills">↺</button>
+          </div>
+        </div>
+        <div id="thumbStrip" class="thumb-strip" aria-label="Drawing thumbnails"></div>
+      </header>
+
+      <main class="main">
+        <div class="stage-card">
+          <svg id="coloringSvg" viewBox="0 0 800 800" preserveAspectRatio="xMidYMid meet"></svg>
+        </div>
+      </main>
+
+      <section class="toolbar">
+        <div class="toolbar-row">
+          <div class="tool-group">
+            <button id="bucketTool" class="tool active" title="Fill">🖌</button>
+            <button id="eraserTool" class="tool" title="Erase">🧽</button>
+          </div>
+          <div class="selected-color" id="selectedColor"></div>
+        </div>
+        <div id="palette" class="palette"></div>
+      </section>
+    </div>
+
+    <script src="app.js"></script>
+  </body>
+</html>
